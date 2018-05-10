@@ -1,2 +1,2 @@
 # CS340
-CS 340 Intro to Databases
+CS340 Intro to Databases
