@@ -1,0 +1,28 @@
+<h1>Album Type Actions</h1>
+
+<h3>Add Album Type</h3>
+<form id="addAlbumType" method="post" action="/albumTypeAdd">
+	<label for="albumType">Album Type:</label>
+	<input type="text" name="albumType" id="albumType" autocomplete="off" required>
+	<br>
+	<input type="submit">
+</form>
+
+<h3>Album Types in Database</h3>
+
+<table>
+	<tr>
+		<th>Album Type</th>
+	</tr>
+	{{#each albumType}}
+	<tr id="row{{this.album_type_id}}">
+		<td>{{this.album_type}}</td>
+		<td> 
+			<form action="/albumTypeDelete/{{this.album_type_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/albumTypeEdit/{{this.album_type_id}}">Edit</a></td>
+	</tr>
+	{{/each}}
+</table>

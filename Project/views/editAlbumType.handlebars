@@ -1,0 +1,9 @@
+<h1>Edit Album Type</h1>
+
+<h3>Change Album Type: {{albumType.album_type}}</h3>
+<form id="changeAlbumType" method="post" action="/albumTypeEdit/{{albumType.album_type_id}}/update">
+	<label for="albumType">Album Type:</label>
+	<input type="text" name="albumType" id ="albumType" autocomplete="off" value="{{albumType.album_type}}" required>
+	<br>
+	<input type="submit">
+</form>

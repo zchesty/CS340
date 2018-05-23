@@ -1,0 +1,9 @@
+<h1>Edit Song Album</h1>
+
+<h3>Change Track Number for {{song.song_name}} on {{song.album_name}}</h3>
+<form id="changeTrackNumber" method="post" action="/songAlbumEdit/{{song.album_id}}/{{song.song_id}}/update">
+	<label for="secondaryTrackNumber">Track Number:</label>
+	<input type="number" name="secondaryTrackNumber" id ="secondaryTrackNumber" autocomplete="off" required value="{{song.track_number}}"> 
+	<br>
+	<input type="submit">
+</form>

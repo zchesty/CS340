@@ -1,0 +1,28 @@
+<h1>Artist Actions</h1>
+
+<h3>Add Artist</h3>
+<form id="addArtist"  method="post" action="/artistAdd">
+	<label for="artistName">Artist Name:</label>
+	<input type="text" name="artistName" id ="artistName" autocomplete="off" required>
+	<br>
+	<input type="submit">
+</form>
+
+<h3>Artists in Database</h3>
+
+<table>
+	<tr>
+		<th>Artist</th>
+	</tr>
+	{{#each artist}}
+	<tr>
+		<td>{{this.artist_name}}</td>
+		<td> 
+			<form action="/artistDelete/{{this.artist_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/artistEdit/{{this.artist_id}}">Edit</a></td>
+	</tr>
+	{{/each}}
+</table>

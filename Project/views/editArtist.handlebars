@@ -1,0 +1,9 @@
+<h1>Edit Artist</h1>
+
+<h3>Change Artist: {{artist.artist_name}}</h3>
+<form id="changeArtist" method="post" action="/artistEdit/{{artist.artist_id}}/update">
+	<label for="artist">Artist:</label>
+	<input type="text" name="artist" id ="artist" autocomplete="off" value="{{artist.artist_name}}"required>
+	<br>
+	<input type="submit">
+</form>

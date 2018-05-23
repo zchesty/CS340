@@ -1,0 +1,92 @@
+<head>
+	<link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<h1>Song Details and Edit</h1>
+<p><a href="/songs">Go to all songs</a></p>
+<p><a href="/searchSongs">Go to search songs</a></P>
+
+<h3>Song Details</h3>
+<table>
+	<tr>
+		<th>Song Name</th>
+		<th>Song Length</th>
+		<th>Song Artist</th>
+	</tr>
+	<tr>
+		<td>{{song.song_name}}</td>
+		<td>{{song.song_length}}</td>
+		<td>{{song.artist_name}}</td>
+	</tr>
+</table>
+<h4>Other artists</h4>
+{{#if songArtists}}
+	<table>
+		<tr>
+			<th>Artist</th>
+			<th>Artist Type</th>
+		</tr>
+		{{#each songArtists}}
+		<tr>
+			<td>{{this.artist_name}}</td>
+			<td>{{this.contributor_type}}</td>
+			<td> 
+			<form action="/songContributorDelete/{{this.artist_id}}/{{this.song_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/songContributorEdit/{{this.artist_id}}/{{this.song_id}}">Edit</a></td>
+		</tr>
+		{{/each}}
+	</table>
+
+{{else}}
+	<p>No other artists for this song</p>
+{{/if}}
+
+
+<h4>Song Appears on</h4>
+{{#if songAlbums}}
+	<table>
+		<tr>
+			<th>Album</th>
+			<th>Album Type</th>
+			<th>Track Number</th>
+		</tr>
+		{{#each songAlbums}}
+		<tr>
+			<td>{{this.album_name}}</td>
+			<td>{{this.album_type}}</td>
+			<td>{{this.track_number}}</td>
+			<td> 
+			<form action="/songAlbumDelete/{{this.album_id}}/{{this.song_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/songAlbumEdit/{{this.album_id}}/{{this.song_id}}">Edit</a></td>
+		</tr>
+		{{/each}}
+	</table>
+
+{{else}}
+	<p>Song is not on an album</p>
+{{/if}}
+
+<h3>Change Song: {{song.song_name}}</h3>
+
+<form id="changeSong">
+	<label for="songName">Song Name:</label>
+	<input type="text" name="songName" id ="songName" autocomplete="off" required value="{{song.song_name}}">
+	<label for="songLength">Song Length (mm:ss):</label>
+	<input type="text" name="songLength" id ="songLength" autocomplete="off" pattern="[0-5]?\d:[0-5]?\d" required value="{{song.song_length}}">
+	<br>
+	<label for="songArtist">Song Main Artist: </label>
+	<select name="songArtist" id="songArtist" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each artists}}
+			<option value="{{this.artist_id}}">{{this.artist_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<input type="submit">
+</form>

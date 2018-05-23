@@ -1,0 +1,107 @@
+<h1>Song Actions</h1>
+
+<h3>Add a New Song</h3>
+<form id="songSubmit">
+	<label for="songName">Song Name:</label>
+	<input type="text" name="songName" id ="songName" autocomplete="off" required>
+	<label for="songLength">Song Length (mm:ss):</label>
+	<input type="text" name="songLength" id ="songLength" autocomplete="off" pattern="[0-5]?\d:[0-5]?\d" required>
+	<br>
+	<label for="songArtist">Song Main Artist: </label>
+	<select name="songArtist" id="songArtist" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each artists}}
+			<option value="{{this.artist_id}}">{{this.artist_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<label for="songAlbum">Song Album: </label>
+	<select name="songAlbum" id="songAlbum"required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each albums}}
+			<option value="{{this.album_id}}">{{this.album_name}}</option>
+		{{/each}}
+	</select>
+	<label for="trackNumber">Track Number:</label>
+	<input type="number" name="trackNumber" id ="trackNumber" autocomplete="off" required>
+	<br>
+	<input type="submit">
+</form>
+<hr>
+<h3>Add Secondary Artist to Song</h3>
+<form id="addSecondaryArtist">
+	<label for="songNameSecondaryArtist">Song Name:</label>
+	<select name="songNameSecondaryArtist" id="songNameSecondaryArtist" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each songs}}
+			<option value="{{this.song_id}}">{{this.song_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<label for="songSecondaryArtist">Artist: </label>
+	<select name="songSecondaryArtist" id="songSecondaryArtist" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each artists}}
+			<option value="{{this.artist_id}}">{{this.artist_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<label for="artistType">Artist Type:</label>
+	<select name="secondaryArtistType" id="secondaryArtistType" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each contributorType}}
+			<option value="{{this.contributor_type_id}}">{{this.contributor_type}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<input type="submit">
+</form>
+<hr>
+<h3>Add Another Album for song</h3>
+<form id="addSecondAlbum">
+	<label for="songNameSecondaryAlbum">Song Name:</label>
+	<select name="songNameSecondaryAlbum" id="songNameSecondaryAlbum" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each songs}}
+			<option value="{{this.song_id}}">{{this.song_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<label for="songSecondAlbum">Song Second Album: </label>
+	<select name="songSecondAlbum" id="songSecondAlbum"required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each albums}}
+			<option value="{{this.album_id}}">{{this.album_name}}</option>
+		{{/each}}
+	</select>
+	<label for="secondaryTrackNumber">Track Number:</label>
+	<input type="number" name="secondaryTrackNumber" id ="secondaryTrackNumber" autocomplete="off" required>
+	<br>
+	<input type="submit">
+
+
+<hr>
+
+<h3>Songs in Database</h3>
+
+<table>
+	<tr>
+		<th>Song Name</th>
+		<th>Song Length</th>
+		<th>Song Artist</th>
+	</tr>
+	{{#each songs}}
+	<tr>
+		<td>{{this.song_name}}</td>
+		<td>{{this.song_length}}</td>
+		<td>{{this.artist_name}}</td> <!-- will need some more logic for secondary artists maybe implement a hover bubble for this-->
+		<td> 
+			<form action="/songDelete/{{this.song_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/songEdit/{{this.song_id}}">See Details and Edit</a></td>
+
+	</tr>
+	{{/each}}
+</table>

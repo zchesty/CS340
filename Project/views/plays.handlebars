@@ -1,0 +1,44 @@
+<h1>Plays</h1>
+
+<h3>Song Play Statistics</h3>
+
+<table>
+	<tr>
+		<th>Song</th>
+		<th>Plays</th>
+		<th>Last Played</th>
+	</tr>
+	{{#each playCounts}}
+	<tr>
+		<td>{{this.song_name}}</td>
+		<td>{{this.num_plays}}</td>
+		<td>{{this.last_played}}</td>
+		<td> 
+			<form action="/addPlay/{{this.song_id}}" method="post">
+        		<input type="submit" value="Add Play Now"/>
+    		</form>
+		</td>
+	</tr>
+	{{/each}}
+
+</table>
+
+<h3>All Plays Data</h3>
+
+<table>
+	<tr>
+		<th>Song</th>
+		<th>PlayTime</th>
+	</tr>
+	{{#each playsAll}}
+	<tr>
+		<td>{{this.song_name}}</td>
+		<td>{{this.play_time}}</td>
+		<td> 
+			<form action="/playDelete/{{this.play_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+	</tr>
+	{{/each}}
+</table>

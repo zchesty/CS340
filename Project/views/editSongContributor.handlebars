@@ -1,0 +1,13 @@
+<h1>Edit Song Contributor</h1>
+
+<h3>Change Contributor Type for {{song.artist_name}} on {{song.song_name}}</h3>
+<form id="changeArtist" method="post" action="/songContributorEdit/{{song.artist_id}}/{{song.song_id}}/update">
+	<select name="secondaryArtistType" id="secondaryArtistType" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each contributorType}}
+			<option value="{{this.contributor_type_id}}">{{this.contributor_type}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<input type="submit">
+</form>

@@ -1,0 +1,28 @@
+<h1>Contributor Type Actions</h1>
+
+<h3>Add Contributor Type</h3>
+<form id="addContributorType" method="post" action="/contributorTypeAdd">
+	<label for="contributorType">Contributor Type:</label>
+	<input type="text" name="contributorType" id ="contributorType" autocomplete="off" required>
+	<br>
+	<input type="submit">
+</form>
+
+<h3>Contributor Types in Database</h3>
+
+<table>
+	<tr>
+		<th>Contributor Type</th>
+	</tr>
+	{{#each contributorType}}
+	<tr>
+		<td>{{this.contributor_type}}</td>
+		<td> 
+			<form action="/contributorTypeDelete/{{this.contributor_type_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/contributorTypeEdit/{{this.contributor_type_id}}">Edit</a></td>
+	</tr>
+	{{/each}}
+</table>

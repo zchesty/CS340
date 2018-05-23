@@ -1,0 +1,53 @@
+<h1>Album Actions</h1>
+
+<h3>Add Album</h3>
+<form id="addAlbum" method="post" action="/artistAdd">
+	<label for="albumName">Album Name:</label>
+	<input type="text" name="albumName" id ="albumName" autocomplete="off" required>
+	<br>
+	<label for="releaseYear">Release Year (yyyy):</label>
+	<input type="text" name="releaseYear" id ="releaseYear" autocomplete="off" pattern="\d\d\d\d" required>
+	<br>
+	<label for="albumType">Album Type: </label>
+	<select name="albumType" id="albumType" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each albumType}}
+			<option value="{{this.album_type_id}}">{{this.album_type}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<label for="albumArtist">Album Artist: </label>
+	<select name="albumArtist" id="albumArtist" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each artists}}
+			<option value="{{this.artist_id}}">{{this.artist_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<input type="submit">
+</form>
+
+<h3>Albums in Database</h3>
+
+<table>
+	<tr>
+		<th>Album</th>
+		<th>Album Type</th>
+		<th>Release Year</th>
+		<th>Album Artist</th>
+	</tr>
+	{{#each albums}}
+	<tr>
+		<td>{{this.album_name}}</td>
+		<td>{{this.album_type}}</td>
+		<td>{{this.release_year}}</td>
+		<td>{{this.artist_name}}</td>
+		<td> 
+			<form action="/albumDelete/{{this.album_id}}" method="post">
+        		<input type="submit" value="Delete"/>
+    		</form>
+		</td>
+		<td><a href="/albumEdit/{{this.album_id}}">Edit</a></td>
+	</tr>
+	{{/each}}
+</table>

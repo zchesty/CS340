@@ -1,0 +1,10 @@
+<h1>Edit Contributor Type {{type}}</h1>
+
+<h3>Change Contributor Type: {{contributorType.contributor_type}}</h3>
+<form id="changeContributorType" method="post" action="/contributorTypeEdit/{{contributorType.contributor_type_id}}/update">
+	<label for="contributorType">Contributor Type:</label>
+	<input type="text" name="contributorType" id ="contributorType" autocomplete="off" value="{{contributorType.contributor_type}}"required>
+	<br>
+	<input type="submit">
+</form>
+

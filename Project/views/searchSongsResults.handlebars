@@ -1,0 +1,12 @@
+<h1>Song Search Results</h1>
+
+{{#if songs}}
+	<p>Click link to view song info</p>
+	<ul>
+	{{#each songs}}
+	<li><a href="/songEdit/{{this.song_id}}">{{this.song_name}} by {{this.artist_name}}</a></li>
+	{{/each}}
+	</ul>
+{{else}}
+	<p>No results returned <a href="/searchSongs">Return to search songs</a></P>
+{{/if}}

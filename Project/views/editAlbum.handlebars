@@ -1,0 +1,28 @@
+<h1>Edit Album</h1>
+
+<h3>Change Album: {{album.album_name}}</h3>
+<form id="changeAlbum" method="post" action="/albumEdit/{{album.album_id}}/update">
+	<label for="albumName">Album Name:</label>
+	<input type="text" name="albumName" id ="albumName" autocomplete="off" required value="{{album.album_name}}">
+	<br>
+	<label for="releaseYear">Release Year (yyyy):</label>
+	<input type="text" name="releaseYear" id ="releaseYear" autocomplete="off" pattern="\d\d\d\d" required value="{{album.release_year}}">
+	<br>
+	<label for="albumType">Album Type: </label>
+	<select name="albumType" id="albumType" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each albumType}}
+			<option value="{{this.album_type_id}}">{{this.album_type}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<label for="albumArtist">Album Artist: </label>
+	<select name="albumArtist" id="albumArtist" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each artists}}
+			<option value="{{this.artist_id}}">{{this.artist_name}}</option>
+		{{/each}}
+	</select>
+	<br>
+	<input type="submit">
+</form>
