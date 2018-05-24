@@ -1,7 +1,7 @@
 <h1>Song Actions</h1>
 
 <h3>Add a New Song</h3>
-<form id="songSubmit">
+<form id="songSubmit" method="post" action="/songAdd">
 	<label for="songName">Song Name:</label>
 	<input type="text" name="songName" id ="songName" autocomplete="off" required>
 	<label for="songLength">Song Length (mm:ss):</label>
@@ -27,9 +27,13 @@
 	<br>
 	<input type="submit">
 </form>
+
+
 <hr>
+
+
 <h3>Add Secondary Artist to Song</h3>
-<form id="addSecondaryArtist">
+<form id="addSecondaryArtist" method="post" action="/songAddSecondaryArtist">
 	<label for="songNameSecondaryArtist">Song Name:</label>
 	<select name="songNameSecondaryArtist" id="songNameSecondaryArtist" required>
 		<option disabled selected value> -- select an option -- </option>
@@ -56,9 +60,14 @@
 	<br>
 	<input type="submit">
 </form>
+
+
 <hr>
+
+
+
 <h3>Add Another Album for song</h3>
-<form id="addSecondAlbum">
+<form id="addSecondAlbum" method="post" action="/songAddSecondaryAlbum">
 	<label for="songNameSecondaryAlbum">Song Name:</label>
 	<select name="songNameSecondaryAlbum" id="songNameSecondaryAlbum" required>
 		<option disabled selected value> -- select an option -- </option>
@@ -78,6 +87,7 @@
 	<input type="number" name="secondaryTrackNumber" id ="secondaryTrackNumber" autocomplete="off" required>
 	<br>
 	<input type="submit">
+</form>
 
 
 <hr>

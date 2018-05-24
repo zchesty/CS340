@@ -22,7 +22,7 @@ app.get('/',function(req,res){
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 app.get('/songs',function(req,res){
   var context = {}
-  mysql.pool.query("SELECT song.song_id, song.song_name, song.song_length, album.album_name, artist.artist_name FROM song INNER JOIN album_song ON song.song_id = album_song.song_id INNER JOIN album ON album_song.album_id = album.album_id INNER JOIN artist_song ON song.song_id = artist_song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id WHERE artist_song.contributor_type_id is NULL ORDER BY song.song_name;", function(err, rows, fields){
+  mysql.pool.query("SELECT song.song_id, song.song_name, song.song_length, artist.artist_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id WHERE artist_song.contributor_type_id is NULL ORDER BY song.song_name;", function(err, rows, fields){
     if(err) {
       next(err);
       return;
@@ -55,10 +55,100 @@ app.get('/songs',function(req,res){
     });
   });
 });
+//song adding stuff
+app.post('/songAdd',function(req,res,next){
+  mysql.pool.query("INSERT INTO song (`song_name`, `song_length`) VALUES (?, ?)", [req.body.songName, req.body.songLength], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    mysql.pool.query("SELECT song.song_id FROM song WHERE song.song_name=?", [req.body.songName], function(err, rows, fields){
+       if(err) {
+      next(err);
+      return;
+      }
+      var id = rows[0];
+      id = id.song_id;
+      mysql.pool.query("INSERT INTO artist_song (`song_id`, `artist_id`) VALUES (?, ?)", [id, req.body.songArtist], function(err, rows, fields){
+        if(err) {
+          next(err);
+          return;
+        }
+        mysql.pool.query("INSERT INTO album_song  (`song_id`, `album_id`, `track_number`) VALUES (?, ?, ?)", [id, req.body.songAlbum, req.body.trackNumber], function(err, rows, fields){
+          if(err) {
+            next(err);
+            return;
+          }
+          var red = '/songEdit/' + id;
+          res.redirect(red);
+        });
+      });
+    });
+  });  
+});
 
+app.post('/songAddSecondaryArtist',function(req,res,next){
+    mysql.pool.query("INSERT INTO artist_song (`song_id`, `artist_id`, `contributor_type_id`) VALUES (?, ?, ?)", [req.body.songNameSecondaryArtist, req.body.songSecondaryArtist, req.body.secondaryArtistType], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    var red = '/songEdit/' + req.body.songNameSecondaryArtist;
+    res.redirect(red);
+  })  
+});
+
+app.post('/songAddSecondaryAlbum',function(req,res,next){
+    mysql.pool.query("INSERT INTO album_song  (`song_id`, `album_id`, `track_number`) VALUES (?, ?, ?)", [req.body.songNameSecondaryAlbum, req.body.songSecondAlbum, req.body.secondaryTrackNumber], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    var red = '/songEdit/' + req.body.songNameSecondaryAlbum;
+    res.redirect(red);
+  })  
+});
+
+//song delete
+app.post('/songDelete/:id',function(req,res,next){
+    mysql.pool.query("DELETE FROM song WHERE song_id=?", [req.params.id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    res.redirect('/songs')
+  })  
+});
+
+//song album dissacociate
+app.post('/songAlbumDelete/:album_id/:song_id',function(req,res,next){
+    mysql.pool.query("DELETE FROM album_song WHERE album_song.song_id=? AND album_song.album_id=?", [req.params.song_id, req.params.album_id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    var red = '/songEdit/' + req.params.song_id;
+    res.redirect(red);
+  })  
+});
+
+//song artist disociate
+app.post('/songContributorDelete/:artist_id/:song_id',function(req,res,next){
+    mysql.pool.query("DELETE FROM artist_song WHERE artist_song.song_id=? AND artist_song.artist_id=?", [req.params.song_id, req.params.artist_id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    var red = '/songEdit/' + req.params.song_id;
+    res.redirect(red);
+  })  
+});
+
+
+//song editing
 app.get('/songEdit/:id',function(req,res){
   var context = {}
-  mysql.pool.query("SELECT song.song_id, song.song_name, song.song_length, album.album_name, artist.artist_name, album_song.track_number FROM song INNER JOIN album_song ON song.song_id = album_song.song_id INNER JOIN album ON album_song.album_id = album.album_id INNER JOIN artist_song ON song.song_id = artist_song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id WHERE song.song_id=?;", [req.params.id], function(err, rows, fields){
+  mysql.pool.query("SELECT song.song_id, song.song_name, song.song_length, artist.artist_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id WHERE song.song_id=? AND artist_song.contributor_type_id is NULL;", [req.params.id], function(err, rows, fields){
     if(err) {
       next(err);
       return;
@@ -106,6 +196,47 @@ app.get('/songEdit/:id',function(req,res){
   });
 });
 
+//edit song artist type
+app.post('/songContributorEdit/:artist_id/:song_id/update',function(req,res,next){
+    mysql.pool.query("UPDATE artist_song SET contributor_type_id =? WHERE artist_song.song_id=? AND artist_song.artist_id=?;", [ req.body.secondaryArtistType, req.params.song_id, req.params.artist_id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    var red = '/songEdit/' + req.params.song_id;
+    res.redirect(red);
+  })  
+});
+
+//edit song album track
+app.post('/songAlbumEdit/:album_id/:song_id/update',function(req,res,next){
+    mysql.pool.query("UPDATE album_song SET album_song.track_number=? WHERE album_song.song_id=? AND album_song.album_id=?;", [req.body.secondaryTrackNumber, req.params.song_id, req.params.album_id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    var red = '/songEdit/' + req.params.song_id;
+    res.redirect(red);
+  })  
+});
+
+
+app.post('/songEdit/:id/update',function(req,res,next){
+    mysql.pool.query("UPDATE song SET song.song_name=?, song.song_length=? WHERE song.song_id = ?;", [req.body.songName, req.body.songLength ,req.params.id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    mysql.pool.query("UPDATE artist_song SET artist_song.artist_id=? WHERE artist_song.song_id = ? AND artist_song.contributor_type_id is NULL;", [req.body.songArtist,req.params.id], function(err, rows, fields){
+      if(err) {
+        next(err);
+        return;
+      }
+      var red = '/songEdit/' + req.params.id;
+      res.redirect(red);
+    });
+  })  
+});
 
 app.get('/songContributorEdit/:artistId/:songId',function(req,res){
   var context = {}
@@ -255,6 +386,26 @@ app.get('/albums',function(req,res){
   });
 });
 
+app.post('/albumAdd',function(req,res,next){
+    mysql.pool.query("INSERT INTO album (`album_name`, `release_year`, `album_type`, `artist_id`) VALUES (?, ?, ?, ?)", [req.body.albumName, req.body.releaseYear, req.body.albumType, req.body.albumArtist], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    res.redirect('/albums')
+  })  
+});
+
+app.post('/albumDelete/:id',function(req,res,next){
+    mysql.pool.query("DELETE FROM album WHERE album_id=?", [req.params.id], function(err, rows, fields){
+    if(err) {
+      next(err);
+      return;
+    }
+    res.redirect('/albums')
+  })  
+});
+
 app.get('/albumEdit/:id',function(req,res,next){
   var context = {};
   mysql.pool.query("SELECT album.album_id, album.album_name, album_type.album_type, album.release_year, artist.artist_name FROM album INNER JOIN album_type ON album.album_type = album_type.album_type_id INNER JOIN artist ON album.artist_id = artist.artist_id WHERE album_id=?",[req.params.id], function(err, rows, fields){
@@ -282,6 +433,19 @@ app.get('/albumEdit/:id',function(req,res,next){
     });
   });
 });
+
+
+app.post('/albumEdit/:id/update',function(req,res,next){
+  mysql.pool.query("UPDATE album SET album.album_name=?, album.release_year=?, album.album_type=?, album.artist_id=? WHERE album.album_id=?", [req.body.albumName, req.body.releaseYear, req.body.albumType, req.body.albumArtist, req.params.id], 
+  function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+    res.redirect('/albums')
+  });
+});
+
 
 //contributor_type table routes
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -432,10 +596,48 @@ app.get('/plays', function(req,res){
         return;
       }
       context.playsAll = rows;
-      res.render('plays', context);
+      mysql.pool.query("SELECT song.song_id, song.song_name FROM song ORDER BY song.song_name", function(err, rows, fields){
+        if(err) {
+          next(err);
+          return;
+        }
+        context.songs = rows;
+        res.render('plays', context);
+      });
     });
   });
 });
+
+app.post('/addplay',function(req,res,next){
+  mysql.pool.query("INSERT INTO plays (`song_id`) VALUES (?);",[req.body.songName], function(err, result){
+    if(err) {
+      next(err);
+      return;
+    }
+    res.redirect('/plays');
+  });
+});
+
+app.post('/addplay/:id',function(req,res,next){
+  mysql.pool.query("INSERT INTO plays (`song_id`) VALUES (?);",[req.params.id], function(err, result){
+    if(err) {
+      next(err);
+      return;
+    }
+    res.redirect('/plays');
+  });
+});
+
+app.post('/playDelete/:id',function(req,res,next){
+  mysql.pool.query("DELETE FROM plays WHERE play_id=?;",[req.params.id], function(err, result){
+    if(err) {
+      next(err);
+      return;
+    }
+    res.redirect('/plays');
+  });
+});
+
 
 
 app.use(function(req,res){

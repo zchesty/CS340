@@ -1,5 +1,17 @@
 <h1>Plays</h1>
 
+<form id="addplay" method="post" action="/addplay">
+	<label for="songName">Song Name:</label>
+	<select name="songName" id="songName" required>
+		<option disabled selected value> -- select an option -- </option>
+		{{#each songs}}
+			<option value="{{this.song_id}}">{{this.song_name}}</option>
+		{{/each}}
+	</select>
+	<input type="submit" value="Add Play">
+</form>
+
+
 <h3>Song Play Statistics</h3>
 
 <table>
@@ -15,7 +27,7 @@
 		<td>{{this.last_played}}</td>
 		<td> 
 			<form action="/addPlay/{{this.song_id}}" method="post">
-        		<input type="submit" value="Add Play Now"/>
+        		<input type="submit" value="Add Play"/>
     		</form>
 		</td>
 	</tr>
