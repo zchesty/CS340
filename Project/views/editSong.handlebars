@@ -74,7 +74,7 @@
 
 <h3>Change Song: {{song.song_name}}</h3>
 
-<form id="changeSong">
+<form id="changeSong" method="post" action="/songEdit/{{song.song_id}}/update">
 	<label for="songName">Song Name:</label>
 	<input type="text" name="songName" id ="songName" autocomplete="off" required value="{{song.song_name}}">
 	<label for="songLength">Song Length (mm:ss):</label>
