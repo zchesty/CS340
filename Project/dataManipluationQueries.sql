@@ -229,6 +229,7 @@ INSERT INTO plays (`song_id`) VALUES ([song_id]);
 -- -------------------------------------------------------------------------------------
 -- results
 SELECT song.song_id, song.song_name, artist.artist_name FROM song 
-INNER JOIN artist_song ON song.song_id = artist_song.song_id
-INNER JOIN artist ON artist_song.artist_id = artist.artist_id
-WHERE song.song_name = [search query] AND artist_song.contributor_type_id is NULL;
+INNER JOIN artist_song ON song.song_id = artist_song.song_id 
+INNER JOIN artist ON artist_song.artist_id = artist.artist_id 
+WHERE song.song_name LIKE ? AND artist_song.contributor_type_id is NULL 
+ORDER BY song.song_name;
