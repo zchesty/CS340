@@ -278,8 +278,10 @@ app.get('/searchSongs',function(req,res){
 });
 
 app.post('/searchSongsResults',function(req,res,next){
-  context ={};
-  mysql.pool.query("SELECT song.song_id, song.song_name, artist.artist_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id WHERE song.song_name =? AND artist_song.contributor_type_id is NULL",[req.body.songToSearch] , function(err, rows, fields){
+  var context ={};
+  var query = req.body.songToSearch;
+  query = "%" + query + "%";
+  mysql.pool.query("SELECT song.song_id, song.song_name, artist.artist_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id WHERE song.song_name LIKE ? AND artist_song.contributor_type_id is NULL ORDER BY song.song_name",[query] , function(err, rows, fields){
     if(err) {
       next(err);
       return;
